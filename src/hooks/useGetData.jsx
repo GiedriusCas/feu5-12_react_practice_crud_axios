@@ -4,8 +4,8 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 
 // butinai turi prasideti zodeliu 'use'
-function useGetData(url) {
-  const [data, setData] = useState({});
+function useGetData(url, initValue = []) {
+  const [data, setData] = useState(initValue);
   const [error, setError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -25,7 +25,7 @@ function useGetData(url) {
       .finally(() => {
         setIsLoading(false);
       });
-  }, []);
+  }, [url]);
 
   return [data, setData, error, isLoading];
 }
