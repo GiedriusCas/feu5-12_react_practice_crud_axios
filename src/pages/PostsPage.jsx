@@ -10,10 +10,10 @@ import { useState } from 'react';
 function PostsPage() {
   const [activeFilterVal, setActiveFilterVal] = useState('all');
   // 2 sukrti state klaidai errorPosts
-  const [allPosts, setAllPosts, error, isLoading] = useGetData(
+  const [allPosts, error, isLoading] = useGetData(
     'http://localhost:5000/posts',
   );
-  console.log('allPosts ===', allPosts);
+  // console.log('allPosts ===', allPosts);
 
   let testFilter = ['all', 'html', 'css', 'JS'];
   testFilter = getAllDiffTags(allPosts);
