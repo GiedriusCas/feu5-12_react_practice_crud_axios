@@ -1,9 +1,9 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 const AuthContext = createContext({
-  token: null,
   email: null,
+  token: null,
   login(userToken, userEmail) {},
   logout() {},
   isLoggedIn: false,
@@ -15,7 +15,8 @@ const localTokenKey = 'LOCAL_TOKEN';
 function AuthProvider({ children }) {
   // pasiimti is storage jei yra
   const tokenFromStorage = localStorage.getItem(localTokenKey);
-  const emailFromStorage = localStorage.getItem(localEmailKey)
+  const emailFromStorage = localStorage.getItem(localEmailKey);
+  // console.log('tokenFromStorage ===', tokenFromStorage);
   const [token, setToken] = useState(tokenFromStorage || '');
   const [email, setEmail] = useState(emailFromStorage || '');
 
@@ -23,20 +24,28 @@ function AuthProvider({ children }) {
   // const isLoggedIn = token ? true : false;
   const isLoggedIn = !!token;
 
+  // efektas kuris vyks pasikeitus token arba email reiksmem.
+  useEffect(() => {
+    // jei turim token
+    if (token) {
+      localStorage.setItem(localTokenKey, token);
+      localStorage.setItem(localEmailKey, email);
+    } else {
+      // istrinti is storage
+      localStorage.removeItem(localTokenKey);
+      localStorage.removeItem(localEmailKey);
+    }
+  }, [token, email]);
+
   function login(userToken, userEmail) {
     setToken(userToken);
     setEmail(userEmail);
-// irasyti i storage
-localStorage.setItem(localEmailKey, userEmail)
-localStorage.setItem(localTokenKey, userToken)
   }
   function logout() {
     // sukurti funkcija logout
     // nustato token ir email i ''
     setToken('');
     setEmail('');
-    // itrinti storage
-    localStorage.removeItem(localTokenKey)
   }
   // perduodam logout i authCtx
   // panaudojam logout Hederyje paspaudus logout mygtuka

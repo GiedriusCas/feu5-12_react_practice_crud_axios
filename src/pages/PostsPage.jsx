@@ -6,11 +6,12 @@ import Alert from '../components/ui/Alert';
 import styled from 'styled-components';
 import { getAllDiffTags } from '../utils/helpers';
 import { useState } from 'react';
+import axios from 'axios';
 
 function PostsPage() {
   const [activeFilterVal, setActiveFilterVal] = useState('all');
   // 2 sukrti state klaidai errorPosts
-  const [allPosts, error, isLoading] = useGetData(
+  const [allPosts, setAllPosts, error, isLoading] = useGetData(
     'http://localhost:5000/posts',
   );
   // console.log('allPosts ===', allPosts);
@@ -43,6 +44,22 @@ function PostsPage() {
 
   const filteredOrAll = activeFilterVal === 'all' ? allPosts : filteredPosts;
 
+  function deletePostHandler(idToDelete) {
+    axios
+      .delete(`http://localhost:5000/posts/${idToDelete}`)
+      .then((delResult) => {
+        console.log('delResult ===', delResult);
+        if (delResult.status === 200) {
+          console.log('istrinta sekmingai');
+          // jei istrinta sekmingai antaujinam state
+          setAllPosts((prevPosts) =>
+            prevPosts.filter(({ id }) => id !== idToDelete),
+          );
+        }
+      })
+      .catch((err) => console.warn(err));
+  }
+
   return (
     <Container>
       {isLoading && <Alert>Loading...</Alert>}
@@ -72,7 +89,7 @@ function PostsPage() {
         </Flex>
       </fieldset>
       {/* 5 sukrti ir atvaizduoti styled komponenta jei errorText yra ne tuscia kabute */}
-      <PostsList posts={filteredOrAll} />
+      <PostsList posts={filteredOrAll} onDeletePost={deletePostHandler} />
     </Container>
   );
 }

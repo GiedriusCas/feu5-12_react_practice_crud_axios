@@ -8,6 +8,7 @@ import axios from 'axios';
 import Feedback from '../components/ui/Feedback';
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
+import { useAuthContext } from '../store/AuthProvider';
 
 const inputsData = [
   { id: 1, type: 'text', label: 'Title', name: 'title' },
@@ -18,6 +19,7 @@ const inputsData = [
 ];
 
 function NewPostPage() {
+  const { email } = useAuthContext();
   const navigate = useNavigate();
   // prideti newPostError state
   const [newPostError, setNewPostError] = useState({});
@@ -26,7 +28,7 @@ function NewPostPage() {
     initialValues: {
       title: '80 days around world',
       body: 'about 80 days around world',
-      author: 'James band',
+      author: email,
       tags: 'travel, books',
       date: '',
     },
@@ -38,7 +40,7 @@ function NewPostPage() {
       date: Yup.date().required(),
     }),
     onSubmit(values) {
-     // console.log('submiting...', values);
+      console.log('submiting...', values);
       const valuesWithTagArr = { ...values };
       valuesWithTagArr.tags = valuesWithTagArr.tags.split(',');
       sendDataToBe(valuesWithTagArr);
@@ -51,7 +53,7 @@ function NewPostPage() {
     axios
       .post('http://localhost:5000/posts', dataToSend)
       .then((resp) => {
-       // console.log('pavyko resp ===', resp);
+        console.log('pavyko resp ===', resp);
         // naviguoti i posts page
         setFormSentSuccess(true);
         setTimeout(() => {
@@ -59,7 +61,7 @@ function NewPostPage() {
         }, 3000);
       })
       .catch((err) => {
-       // console.warn('NEpavyko err ===', err);
+        console.warn('NEpavyko err ===', err);
         // set new newPostError to err
         setNewPostError(err);
       });
@@ -85,6 +87,7 @@ function NewPostPage() {
             type={iObj.type}
             label={iObj.label}
             name={iObj.name}
+            disabled={iObj.name === 'author'}
             value={formik.values[iObj.name]}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
