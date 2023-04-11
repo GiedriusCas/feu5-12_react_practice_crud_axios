@@ -38,7 +38,7 @@ function NewPostPage() {
       date: Yup.date().required(),
     }),
     onSubmit(values) {
-      console.log('submiting...', values);
+     // console.log('submiting...', values);
       const valuesWithTagArr = { ...values };
       valuesWithTagArr.tags = valuesWithTagArr.tags.split(',');
       sendDataToBe(valuesWithTagArr);
@@ -51,7 +51,7 @@ function NewPostPage() {
     axios
       .post('http://localhost:5000/posts', dataToSend)
       .then((resp) => {
-        console.log('pavyko resp ===', resp);
+       // console.log('pavyko resp ===', resp);
         // naviguoti i posts page
         setFormSentSuccess(true);
         setTimeout(() => {
@@ -59,7 +59,7 @@ function NewPostPage() {
         }, 3000);
       })
       .catch((err) => {
-        console.warn('NEpavyko err ===', err);
+       // console.warn('NEpavyko err ===', err);
         // set new newPostError to err
         setNewPostError(err);
       });

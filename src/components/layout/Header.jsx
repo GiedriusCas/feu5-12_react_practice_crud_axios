@@ -43,7 +43,7 @@ const navData = [
 
 function Header() {
   const ctx = useAuthContext();
-  // console.log('ctx ===', ctx);
+   //console.log('ctx ===', ctx);
   // console.log('isLoggedIn ===', isLoggedIn);
   return (
     <StyledHeader>
@@ -66,6 +66,7 @@ function Header() {
           {ctx.isLoggedIn && (
             <Link to={'/'}>
               <Button onClick={ctx.logout}>Loguot</Button>
+              <span>{ctx.email}</span>
             </Link>
           )}
         </Nav>
